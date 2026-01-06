@@ -6,6 +6,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { CartProvider } from "@/contexts/CartContext";
 import CartDrawer from "@/components/cart/CartDrawer";
 import Index from "./pages/Index";
+import DailyCard from "./pages/DailyCard";
+import ProductDetail from "./pages/ProductDetail";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -20,6 +22,8 @@ const App = () => (
           <CartDrawer />
           <Routes>
             <Route path="/" element={<Index />} />
+            <Route path="/daily-card" element={<DailyCard />} />
+            <Route path="/product/:id" element={<ProductDetail />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
