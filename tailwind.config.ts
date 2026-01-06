@@ -14,8 +14,8 @@ export default {
     },
     extend: {
       fontFamily: {
-        display: ['Cormorant Garamond', 'Georgia', 'serif'],
-        body: ['Outfit', 'system-ui', 'sans-serif'],
+        display: ['Gowun Batang', 'Georgia', 'serif'],
+        body: ['Mohave', 'system-ui', 'sans-serif'],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -63,6 +63,10 @@ export default {
         celestial: {
           DEFAULT: "hsl(var(--celestial))",
           foreground: "hsl(var(--celestial-foreground))",
+        },
+        silver: {
+          DEFAULT: "hsl(var(--silver))",
+          foreground: "hsl(var(--silver-foreground))",
         },
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",

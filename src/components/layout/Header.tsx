@@ -1,9 +1,10 @@
 import { Link, useLocation } from 'react-router-dom';
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ShoppingBag, Menu, X, Sparkles, Instagram, ExternalLink } from 'lucide-react';
+import { ShoppingBag, Menu, X, Instagram, ExternalLink } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useCart } from '@/contexts/CartContext';
+import logo from '@/assets/logo.svg';
 
 const navigation = [
   { name: 'Shop', href: '/shop' },
@@ -23,9 +24,9 @@ export default function Header() {
       <nav className="container mx-auto px-4 sm:px-6 lg:px-8" aria-label="Global">
         <div className="flex items-center justify-between h-16 lg:h-20">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-2 group">
-            <Sparkles className="h-6 w-6 text-gold transition-transform group-hover:rotate-12" />
-            <span className="font-display text-xl lg:text-2xl font-semibold text-foreground">
+          <Link to="/" className="flex items-center gap-3 group">
+            <img src={logo} alt="Manifesting Works" className="h-10 w-auto lg:h-12 transition-transform group-hover:scale-105" />
+            <span className="font-display text-xl lg:text-2xl font-semibold text-foreground hidden sm:block">
               Manifesting Works
             </span>
           </Link>
@@ -115,10 +116,10 @@ export default function Header() {
               <div className="flex items-center justify-between p-6 border-b border-border">
                 <Link 
                   to="/" 
-                  className="flex items-center gap-2"
+                  className="flex items-center gap-3"
                   onClick={() => setMobileMenuOpen(false)}
                 >
-                  <Sparkles className="h-6 w-6 text-gold" />
+                  <img src={logo} alt="Manifesting Works" className="h-10 w-auto" />
                   <span className="font-display text-xl font-semibold">Manifesting Works</span>
                 </Link>
                 <Button
