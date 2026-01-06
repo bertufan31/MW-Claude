@@ -74,14 +74,14 @@ export default function ProductCard({ product }: ProductCardProps) {
 
         {/* Product Info */}
         <div className="space-y-1">
-          <h3 className="font-display text-lg font-medium group-hover:text-gold transition-colors line-clamp-1">
+          <h3 className="font-display text-lg font-medium group-hover:text-lavender transition-colors line-clamp-1">
             {product.name}
           </h3>
           <p className="text-muted-foreground text-sm line-clamp-2">
             {product.description}
           </p>
           <div className="flex items-center gap-2 pt-1">
-            <span className="font-semibold text-gold">${product.price.toFixed(2)}</span>
+            <span className="font-semibold text-lavender">${product.price.toFixed(2)}</span>
             {product.originalPrice && (
               <span className="text-sm text-muted-foreground line-through">
                 ${product.originalPrice.toFixed(2)}
