@@ -27,9 +27,9 @@
     --secondary: 30 100% 86%;
     --secondary-foreground: 78 24% 15%;
 
-    /* Soft Muted */
+    /* Soft Muted - WCAG AA compliant (4.5:1+ contrast on light bg) */
     --muted: 0 0% 92%;
-    --muted-foreground: 78 15% 40%;
+    --muted-foreground: 78 20% 30%;
 
     /* Lavender/Purple - Accent */
     --accent: 288 78% 72%;
