@@ -4,7 +4,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ShoppingBag, Menu, X, Instagram, ExternalLink } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useCart } from '@/contexts/CartContext';
-import logo from '@/assets/logo.svg';
 
 const navigation = [
   { name: 'Shop', href: '/shop' },
@@ -58,7 +57,9 @@ export default function Header() {
 
           {/* Center - Logo */}
           <Link to="/" className="flex items-center justify-center group absolute left-1/2 -translate-x-1/2">
-            <img src={logo} alt="Manifesting Works" className="h-14 w-auto lg:h-16 transition-transform group-hover:scale-105" />
+            <span className="font-display text-2xl lg:text-3xl font-medium italic text-foreground transition-transform group-hover:scale-105">
+              Manifesting Works
+            </span>
           </Link>
 
           {/* Right side actions */}
@@ -113,11 +114,10 @@ export default function Header() {
               <div className="flex items-center justify-between p-6 border-b border-border">
                 <Link 
                   to="/" 
-                  className="flex items-center gap-3"
+                  className="flex items-center"
                   onClick={() => setMobileMenuOpen(false)}
                 >
-                  <img src={logo} alt="Manifesting Works" className="h-10 w-auto" />
-                  <span className="font-display text-xl font-semibold">Manifesting Works</span>
+                  <span className="font-display text-xl font-medium italic text-foreground">Manifesting Works</span>
                 </Link>
                 <Button
                   variant="ghost"
