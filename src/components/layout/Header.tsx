@@ -45,7 +45,7 @@ export default function Header() {
 
           {/* Center - Logo */}
           <Link to="/" className="flex items-center justify-center group absolute left-1/2 -translate-x-1/2">
-            <span className="text-2xl lg:text-3xl italic text-foreground transition-transform group-hover:scale-105 font-serif font-bold">
+            <span className="text-2xl lg:text-3xl italic text-foreground transition-transform group-hover:scale-105 font-serif font-bold text-center">
               Manifesting Works
             </span>
           </Link>
