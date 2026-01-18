@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, Share2, RefreshCw, ShoppingBag } from 'lucide-react';
+import { Sparkles, Share2, RefreshCw, ShoppingBag, Loader2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import { Button } from '@/components/ui/button';
-import { getRandomCard, manifestationCards, ManifestationCard } from '@/data/manifestationCards';
+import { getRandomCard, manifestationCards, categories } from '@/data/manifestationCards';
+import { useTarotCardGenerator } from '@/hooks/useTarotCardGenerator';
 
 // Element colors for card backgrounds
 const elementColors = {
@@ -16,26 +17,37 @@ const elementColors = {
   spirit: 'from-lavender to-purple-500',
 };
 
-export default function DailyCard() {
-  const [drawnCard, setDrawnCard] = useState<ManifestationCard | null>(null);
-  const [isFlipping, setIsFlipping] = useState(false);
+const elementIcons = {
+  fire: '🔥',
+  water: '💧',
+  earth: '🌍',
+  air: '💨',
+  spirit: '✨',
+};
 
-  const drawCard = () => {
-    setIsFlipping(true);
-    setTimeout(() => {
-      setDrawnCard(getRandomCard());
-      setIsFlipping(false);
-    }, 600);
+export default function DailyCard() {
+  const { isGenerating, generatedCard, generateCard, reset } = useTarotCardGenerator();
+  const [hasDrawn, setHasDrawn] = useState(false);
+
+  const drawCard = async () => {
+    setHasDrawn(true);
+    const card = getRandomCard();
+    await generateCard(card);
   };
 
   const shareCard = () => {
-    if (drawnCard && navigator.share) {
+    if (generatedCard?.card && navigator.share) {
       navigator.share({
-        title: drawnCard.title,
-        text: `${drawnCard.affirmation} - Manifesting Works`,
+        title: generatedCard.card.title,
+        text: `${generatedCard.card.message} - Manifesting Works`,
         url: window.location.href,
       });
     }
+  };
+
+  const handleReset = () => {
+    setHasDrawn(false);
+    reset();
   };
 
   return (
@@ -51,10 +63,10 @@ export default function DailyCard() {
             >
               <Sparkles className="h-12 w-12 text-lavender mx-auto mb-4" />
               <h1 className="font-display text-4xl md:text-5xl font-bold mb-4">
-                Daily Manifestation Card
+                AI Daily Manifestation Card
               </h1>
               <p className="font-body text-peach/80 max-w-xl mx-auto text-lg">
-                Let the universe guide you. Draw a card to receive your daily manifestation message and affirmation.
+                Each card features a unique AI-generated tarot-style cat illustration. Draw your card to receive mystical guidance.
               </p>
             </motion.div>
           </div>
@@ -64,13 +76,12 @@ export default function DailyCard() {
         <section className="py-16 md:py-24">
           <div className="container mx-auto px-4">
             <div className="flex flex-col items-center">
-              <div className="relative w-72 h-[432px] perspective-1000 mb-8">
+              <div className="relative w-80 h-[480px] perspective-1000 mb-8">
                 <AnimatePresence mode="wait">
-                  {!drawnCard ? (
+                  {!hasDrawn ? (
                     <motion.div
                       key="back"
                       initial={{ rotateY: 0 }}
-                      animate={{ rotateY: isFlipping ? 180 : 0 }}
                       exit={{ rotateY: 180 }}
                       transition={{ duration: 0.6 }}
                       className="absolute inset-0 cursor-pointer"
@@ -84,12 +95,27 @@ export default function DailyCard() {
                             Tap to Draw
                           </p>
                           <p className="font-body text-olive/70 mt-2">
-                            Your daily guidance awaits
+                            Your AI-generated guidance awaits
                           </p>
                         </div>
                       </div>
                     </motion.div>
-                  ) : (
+                  ) : isGenerating ? (
+                    <motion.div
+                      key="loading"
+                      initial={{ rotateY: -180 }}
+                      animate={{ rotateY: 0 }}
+                      transition={{ duration: 0.6 }}
+                      className="absolute inset-0"
+                      style={{ transformStyle: 'preserve-3d' }}
+                    >
+                      <div className="w-full h-full bg-gradient-to-br from-lavender to-primary rounded-2xl flex flex-col items-center justify-center shadow-xl">
+                        <Loader2 className="h-16 w-16 text-olive animate-spin mb-4" />
+                        <p className="font-display text-olive text-xl">Creating your card...</p>
+                        <p className="font-body text-olive/70 mt-2">AI is painting your mystical cat</p>
+                      </div>
+                    </motion.div>
+                  ) : generatedCard?.card ? (
                     <motion.div
                       key="front"
                       initial={{ rotateY: -180 }}
@@ -99,37 +125,59 @@ export default function DailyCard() {
                       style={{ transformStyle: 'preserve-3d' }}
                     >
                       <div className="w-full h-full bg-card rounded-2xl overflow-hidden shadow-xl">
-                        <div className={`h-2/5 bg-gradient-to-br ${elementColors[drawnCard.element]} flex items-center justify-center`}>
-                          <div className="text-center text-white">
-                            <Sparkles className="h-12 w-12 mx-auto mb-2" />
-                            <p className="font-body text-sm uppercase tracking-wider">{drawnCard.element}</p>
-                            <p className="font-display text-lg mt-1">{drawnCard.catName}</p>
+                        {/* AI Generated Image or Fallback */}
+                        {generatedCard.imageUrl ? (
+                          <div className="h-1/2 relative">
+                            <img 
+                              src={generatedCard.imageUrl} 
+                              alt={`Tarot card: ${generatedCard.card.title}`}
+                              className="w-full h-full object-cover"
+                            />
+                            <div className="absolute top-3 right-3 text-2xl bg-black/40 rounded-full w-10 h-10 flex items-center justify-center">
+                              {elementIcons[generatedCard.card.element]}
+                            </div>
+                            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
+                              <span className="text-xs font-medium text-white bg-white/20 px-3 py-1 rounded-full">
+                                {generatedCard.card.category}
+                              </span>
+                            </div>
                           </div>
-                        </div>
-                        <div className="p-6 text-center h-3/5 flex flex-col justify-center">
-                          <h2 className="font-display text-foreground text-xl font-bold mb-3">
-                            {drawnCard.title}
+                        ) : (
+                          <div className={`h-1/2 bg-gradient-to-br ${elementColors[generatedCard.card.element]} flex items-center justify-center relative`}>
+                            <div className="absolute top-3 right-3 text-2xl">
+                              {elementIcons[generatedCard.card.element]}
+                            </div>
+                            <div className="text-center text-white">
+                              <Sparkles className="h-12 w-12 mx-auto mb-2" />
+                              <p className="font-body text-sm uppercase tracking-wider">{generatedCard.card.element}</p>
+                              <span className="text-xs bg-white/20 px-3 py-1 rounded-full mt-2 inline-block">
+                                {generatedCard.card.category}
+                              </span>
+                            </div>
+                          </div>
+                        )}
+                        
+                        <div className="p-6 text-center h-1/2 flex flex-col justify-center">
+                          <h2 className="font-display text-foreground text-2xl font-bold mb-3">
+                            {generatedCard.card.title}
                           </h2>
-                          <p className="font-body text-muted-foreground text-sm mb-4">
-                            {drawnCard.message}
-                          </p>
-                          <p className="font-display text-lavender text-base italic">
-                            "{drawnCard.affirmation}"
+                          <p className="font-body text-muted-foreground text-sm leading-relaxed">
+                            "{generatedCard.card.message}"
                           </p>
                         </div>
                       </div>
                     </motion.div>
-                  )}
+                  ) : null}
                 </AnimatePresence>
               </div>
 
               <div className="flex gap-4">
-                {drawnCard && (
+                {hasDrawn && !isGenerating && generatedCard?.card && (
                   <>
                     <Button
                       variant="outline"
                       className="border-primary text-primary hover:bg-primary/10"
-                      onClick={drawCard}
+                      onClick={handleReset}
                     >
                       <RefreshCw className="h-4 w-4 mr-2" />
                       Draw Again
@@ -157,8 +205,17 @@ export default function DailyCard() {
                 Card Collection
               </h2>
               <p className="font-body text-muted-foreground max-w-xl mx-auto">
-                Explore all the manifestation cards in our deck. Own the physical deck to enhance your daily practice.
+                Explore all 93 manifestation cards organized by category. Each card offers unique guidance for your journey.
               </p>
+            </div>
+
+            {/* Category Filter */}
+            <div className="flex flex-wrap justify-center gap-2 mb-8">
+              {Object.values(categories).map((cat) => (
+                <span key={cat} className="text-xs bg-muted px-3 py-1 rounded-full text-muted-foreground">
+                  {cat}
+                </span>
+              ))}
             </div>
 
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
@@ -168,20 +225,24 @@ export default function DailyCard() {
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ delay: index * 0.05 }}
+                  transition={{ delay: index * 0.02 }}
                   className="group cursor-pointer"
                 >
                   <div className="relative overflow-hidden rounded-xl shadow-card">
-                    <div className={`w-full aspect-[2/3] bg-gradient-to-br ${elementColors[card.element]} flex items-center justify-center transition-transform duration-500 group-hover:scale-110`}>
+                    <div className={`w-full aspect-[2/3] bg-gradient-to-br ${elementColors[card.element]} flex items-center justify-center transition-transform duration-500 group-hover:scale-110 relative`}>
+                      <div className="absolute top-2 right-2 text-lg">
+                        {elementIcons[card.element]}
+                      </div>
                       <div className="text-center text-white p-4">
                         <Sparkles className="h-8 w-8 mx-auto mb-2" />
-                        <p className="font-display font-bold text-lg">{card.catName}</p>
+                        <p className="font-display font-bold text-sm">{card.title}</p>
+                        <span className="text-xs opacity-70 mt-1 block">{card.category}</span>
                       </div>
                     </div>
-                    <div className="absolute inset-0 bg-olive/70 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center p-4">
+                    <div className="absolute inset-0 bg-olive/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center p-4">
                       <div className="text-center">
-                        <p className="font-display text-peach font-bold mb-2">{card.title}</p>
-                        <p className="font-body text-lavender text-sm italic">"{card.affirmation}"</p>
+                        <p className="font-display text-peach font-bold mb-2 text-lg">{card.title}</p>
+                        <p className="font-body text-lavender text-xs italic">"{card.message}"</p>
                       </div>
                     </div>
                   </div>
