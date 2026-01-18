@@ -20,7 +20,7 @@ export default function Header() {
   const location = useLocation();
 
   return (
-    <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-lg border-b border-border">
+    <header className="sticky top-0 z-50 bg-background/60 backdrop-blur-md border-b border-border/50">
       <nav className="container mx-auto px-4 sm:px-6 lg:px-8" aria-label="Global">
         <div className="flex items-center justify-between h-20 lg:h-24">
           {/* Left - Desktop Navigation */}
@@ -29,17 +29,17 @@ export default function Header() {
               <Link
                 key={item.name}
                 to={item.href}
-                className={`font-body text-sm font-medium transition-colors relative py-2 ${
+                className={`font-body text-sm font-semibold transition-colors relative py-2 ${
                   location.pathname === item.href
-                    ? 'text-gold'
-                    : 'text-muted-foreground hover:text-foreground'
+                    ? 'text-primary'
+                    : 'text-foreground/80 hover:text-foreground'
                 }`}
               >
                 {item.name}
                 {location.pathname === item.href && (
                   <motion.div
                     layoutId="activeNav"
-                    className="absolute -bottom-px left-0 right-0 h-0.5 bg-gold"
+                    className="absolute -bottom-px left-0 right-0 h-0.5 bg-primary"
                   />
                 )}
               </Link>
@@ -68,7 +68,7 @@ export default function Header() {
               href="https://etsy.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="hidden lg:flex items-center gap-1 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+              className="hidden lg:flex items-center gap-1 text-sm font-semibold text-foreground/80 hover:text-foreground transition-colors"
             >
               <ExternalLink className="h-4 w-4" />
               Etsy
