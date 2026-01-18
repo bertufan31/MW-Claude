@@ -22,17 +22,9 @@ export default function Header() {
   return (
     <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-lg border-b border-border">
       <nav className="container mx-auto px-4 sm:px-6 lg:px-8" aria-label="Global">
-        <div className="flex items-center justify-between h-16 lg:h-20">
-          {/* Logo */}
-          <Link to="/" className="flex items-center gap-3 group">
-            <img src={logo} alt="Manifesting Works" className="h-10 w-auto lg:h-12 transition-transform group-hover:scale-105" />
-            <span className="font-display text-xl lg:text-2xl font-semibold text-foreground hidden sm:block">
-              Manifesting Works
-            </span>
-          </Link>
-
-          {/* Desktop Navigation */}
-          <div className="hidden lg:flex lg:items-center lg:gap-8">
+        <div className="flex items-center justify-between h-20 lg:h-24">
+          {/* Left - Desktop Navigation */}
+          <div className="hidden lg:flex lg:items-center lg:gap-6 flex-1">
             {navigation.map((item) => (
               <Link
                 key={item.name}
@@ -54,8 +46,23 @@ export default function Header() {
             ))}
           </div>
 
+          {/* Mobile menu button - Left on mobile */}
+          <Button
+            variant="ghost"
+            size="icon"
+            className="lg:hidden"
+            onClick={() => setMobileMenuOpen(true)}
+          >
+            <Menu className="h-5 w-5" />
+          </Button>
+
+          {/* Center - Logo */}
+          <Link to="/" className="flex items-center justify-center group absolute left-1/2 -translate-x-1/2">
+            <img src={logo} alt="Manifesting Works" className="h-14 w-auto lg:h-16 transition-transform group-hover:scale-105" />
+          </Link>
+
           {/* Right side actions */}
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-4 flex-1 justify-end">
             {/* Etsy Link - Desktop only */}
             <a
               href="https://etsy.com"
@@ -80,16 +87,6 @@ export default function Header() {
                   {totalItems}
                 </span>
               )}
-            </Button>
-
-            {/* Mobile menu button */}
-            <Button
-              variant="ghost"
-              size="icon"
-              className="lg:hidden"
-              onClick={() => setMobileMenuOpen(true)}
-            >
-              <Menu className="h-5 w-5" />
             </Button>
           </div>
         </div>
