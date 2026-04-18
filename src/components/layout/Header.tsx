@@ -72,25 +72,22 @@ export default function Header() {
       {/* Mobile Menu */}
       <AnimatePresence>
         {mobileMenuOpen && <>
-            <motion.div initial={{
-          opacity: 0
-        }} animate={{
-          opacity: 1
-        }} exit={{
-          opacity: 0
-        }} className="fixed inset-0 z-50 bg-foreground/20 backdrop-blur-sm lg:hidden" onClick={() => setMobileMenuOpen(false)} />
-            <motion.div initial={{
-          x: '100%'
-        }} animate={{
-          x: 0
-        }} exit={{
-          x: '100%'
-        }} transition={{
-          type: 'spring',
-          damping: 25,
-          stiffness: 200
-        }} className="fixed inset-y-0 right-0 z-50 w-full max-w-sm bg-background shadow-xl lg:hidden">
-              <div className="flex items-center justify-between p-6 border-b border-border">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.25 }}
+              className="fixed inset-0 z-50 bg-foreground/30 backdrop-blur-sm lg:hidden"
+              onClick={() => setMobileMenuOpen(false)}
+            />
+            <motion.div
+              initial={{ x: '-100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '-100%' }}
+              transition={{ type: 'spring', damping: 28, stiffness: 240 }}
+              className="fixed inset-y-0 left-0 z-50 w-full max-w-sm bg-background shadow-2xl lg:hidden flex flex-col"
+            >
+              <div className="flex items-center justify-between p-6 border-b border-border bg-background">
                 <Link to="/" className="flex items-center" onClick={() => setMobileMenuOpen(false)}>
                   <span className="font-display text-xl font-medium italic text-foreground">Manifesting Works</span>
                 </Link>
@@ -98,13 +95,41 @@ export default function Header() {
                   <X className="h-5 w-5" />
                 </Button>
               </div>
-              <div className="p-6">
-                <div className="space-y-4">
-                  {navigation.map(item => <Link key={item.name} to={item.href} className={`flex items-center min-h-[44px] font-body text-lg font-medium py-3 transition-colors ${location.pathname === item.href ? 'text-gold' : 'text-foreground hover:text-gold'}`} onClick={() => setMobileMenuOpen(false)}>
-                      {item.name}
-                    </Link>)}
+              <motion.div
+                className="p-6 flex-1 bg-background"
+                initial="hidden"
+                animate="visible"
+                variants={{
+                  hidden: {},
+                  visible: { transition: { delayChildren: 0.25, staggerChildren: 0.07 } },
+                }}
+              >
+                <div className="space-y-1">
+                  {navigation.map(item => (
+                    <motion.div
+                      key={item.name}
+                      variants={{
+                        hidden: { opacity: 0, x: -16 },
+                        visible: { opacity: 1, x: 0, transition: { duration: 0.3, ease: 'easeOut' } },
+                      }}
+                    >
+                      <Link
+                        to={item.href}
+                        className={`flex items-center min-h-[44px] font-body text-lg font-medium py-3 transition-colors ${location.pathname === item.href ? 'text-gold' : 'text-foreground hover:text-gold'}`}
+                        onClick={() => setMobileMenuOpen(false)}
+                      >
+                        {item.name}
+                      </Link>
+                    </motion.div>
+                  ))}
                 </div>
-                <div className="mt-8 pt-8 border-t border-border">
+                <motion.div
+                  className="mt-8 pt-8 border-t border-border"
+                  variants={{
+                    hidden: { opacity: 0, x: -16 },
+                    visible: { opacity: 1, x: 0, transition: { duration: 0.3, ease: 'easeOut' } },
+                  }}
+                >
                   <a href="https://etsy.com" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors">
                     <ExternalLink className="h-5 w-5" />
                     <span>Shop on Etsy</span>
@@ -114,8 +139,8 @@ export default function Header() {
                       <Instagram className="h-6 w-6" />
                     </a>
                   </div>
-                </div>
-              </div>
+                </motion.div>
+              </motion.div>
             </motion.div>
           </>}
       </AnimatePresence>
