@@ -12,22 +12,28 @@ serve(async (req) => {
 
   try {
     const { title, category, element } = await req.json();
-    
+
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) {
       throw new Error("LOVABLE_API_KEY is not configured");
     }
 
-    // Create a detailed prompt for a mystical tarot-style cat card
-    const elementDescriptions: Record<string, string> = {
-      fire: "warm golden and orange tones, flames, radiant energy",
-      water: "flowing blues and teals, waves, serene reflections",
-      earth: "rich greens and browns, crystals, grounding stones",
-      air: "soft purples and whites, clouds, ethereal light",
-      spirit: "mystical violets and golds, stars, celestial energy",
+    // Element-driven palette hints to keep variety while staying cohesive
+    const palettes: Record<string, string> = {
+      fire: "warm terracotta, burnt orange, deep red, golden ochre, cream background",
+      water: "teal, soft blue, coral red accents, off-white background",
+      earth: "sage green, mossy olive, dusty rose, muted cream background",
+      air: "dusty lavender, soft violet, pale gold, parchment background",
+      spirit: "muted indigo, antique gold, terracotta accents, cream background",
     };
 
-    const prompt = `A mystical tarot card illustration featuring an elegant cat as the central figure. The cat embodies the concept of "${title}" (${category}). The art style is ornate Art Nouveau mixed with mystical tarot aesthetics. The cat has expressive, wise eyes and is surrounded by ${elementDescriptions[element] || 'mystical symbols and cosmic energy'}. Include decorative borders with sacred geometry patterns, moon phases, and stars. The overall mood is spiritual, magical, and empowering. Rich jewel tones with gold accents. Vertical composition perfect for a tarot card. Ultra high resolution.`;
+    // Vintage tarot illustration prompt — full-bleed art with the title word
+    // integrated into a banner inside the card itself (not overlaid by UI).
+    const prompt = `A vintage hand-drawn tarot card illustration, vertical 3:4 portrait composition, full-bleed artwork that fills the entire frame. The card features an expressive, charming cat as the central character — stylized in a vintage woodcut / linocut / Art Nouveau storybook style with bold black inked outlines, hand-textured shading, slight paper grain, and subtly aged edges. The cat embodies the concept of "${title}" through its pose, expression, and the symbolic objects around it (props, plants, herbs, flowers, celestial elements relevant to "${title}"). 
+
+Surround the scene with an ornate decorative border featuring botanical and mystical motifs (vines, flowers, sacred geometry, small symbols). At the bottom of the card, integrate a horizontal scroll/banner ribbon containing ONLY the single word "${title.toUpperCase()}" in bold vintage serif typography (clean, large, perfectly spelled — no extra letters, no typos, no other words anywhere on the card).
+
+Color palette: ${palettes[element] || palettes.spirit}. Slightly desaturated, vintage printed look with risograph / screen-print texture. NO modern UI elements, NO photographs, NO digital gradients — pure hand-illustrated tarot art. The composition should feel like a single complete antique tarot card you could hold in your hand. Ultra detailed, high resolution, centered composition.`;
 
     console.log("Generating tarot card image for:", title);
 
@@ -70,7 +76,6 @@ serve(async (req) => {
     const data = await response.json();
     console.log("AI response received");
 
-    // Extract the image from the response
     const imageUrl = data.choices?.[0]?.message?.images?.[0]?.image_url?.url;
 
     if (!imageUrl) {

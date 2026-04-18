@@ -1,26 +1,11 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, Share2, RotateCcw, Loader2 } from 'lucide-react';
+import { Sparkles, Share2, RotateCcw, Loader2, Download } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { getRandomCard, type ManifestationCard } from '@/data/manifestationCards';
+import { getRandomCard } from '@/data/manifestationCards';
 import { useTarotCardGenerator } from '@/hooks/useTarotCardGenerator';
 import { Link } from 'react-router-dom';
-
-const elementColors = {
-  fire: 'from-orange-500 to-red-500',
-  water: 'from-blue-400 to-cyan-500',
-  earth: 'from-amber-600 to-yellow-700',
-  air: 'from-sky-300 to-indigo-400',
-  spirit: 'from-purple-500 to-pink-500',
-};
-
-const elementIcons = {
-  fire: '🔥',
-  water: '💧',
-  earth: '🌍',
-  air: '💨',
-  spirit: '✨',
-};
+import { toast } from '@/hooks/use-toast';
 
 export default function DailyCardWidget() {
   const [hasDrawn, setHasDrawn] = useState(false);
@@ -32,23 +17,35 @@ export default function DailyCardWidget() {
     await generateCard(card);
   };
 
+  const handleDownload = async () => {
+    if (!generatedCard?.imageUrl || !generatedCard.card) return;
+    try {
+      const res = await fetch(generatedCard.imageUrl);
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `manifestation-${generatedCard.card.title.toLowerCase().replace(/\s+/g, '-')}.png`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      toast({ title: 'Downloaded', description: 'Your card has been saved.' });
+    } catch {
+      toast({ title: 'Download failed', description: 'Please try again.', variant: 'destructive' });
+    }
+  };
+
   const handleShare = async () => {
     if (!generatedCard?.card) return;
-    
-    const shareText = `✨ My Daily Manifestation Card: ${generatedCard.card.title}\n\nCategory: ${generatedCard.card.category}\n\n"${generatedCard.card.message}"\n\nDraw your card at Manifesting Works!`;
-    
+    const shareText = `✨ My Daily Manifestation Card: ${generatedCard.card.title}\n\n"${generatedCard.card.message}"\n\nDraw your card at Manifesting Works!`;
     if (navigator.share) {
       try {
-        await navigator.share({
-          title: 'My Daily Manifestation Card',
-          text: shareText,
-        });
-      } catch (err) {
-        // User cancelled share
-      }
+        await navigator.share({ title: 'My Daily Manifestation Card', text: shareText });
+      } catch { /* cancelled */ }
     } else {
-      // Fallback: copy to clipboard
       navigator.clipboard.writeText(shareText);
+      toast({ title: 'Copied', description: 'Card message copied to clipboard.' });
     }
   };
 
@@ -60,7 +57,7 @@ export default function DailyCardWidget() {
   return (
     <section className="py-20 bg-gradient-warm">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-2xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -75,121 +72,95 @@ export default function DailyCardWidget() {
               Draw Your Daily Manifestation Card
             </h2>
             <p className="text-muted-foreground max-w-lg mx-auto">
-              Each card features a unique AI-generated tarot-style cat illustration 
-              with your personalized manifestation message.
+              A unique vintage tarot-style cat illustration, generated just for you.
             </p>
           </motion.div>
 
-          <div className="flex justify-center">
-            <div className="perspective-1000 w-72 h-[420px]">
+          <div className="flex flex-col items-center">
+            {/* Card area — 3:4 portrait */}
+            <div className="w-full max-w-sm aspect-[3/4]">
               <AnimatePresence mode="wait">
                 {!hasDrawn ? (
-                  // Card Back - Ready to Draw
-                  <motion.div
+                  <motion.button
                     key="back"
-                    initial={{ opacity: 0, scale: 0.9 }}
+                    initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, rotateY: 180 }}
-                    transition={{ duration: 0.6 }}
-                    className="w-full h-full cursor-pointer"
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.4 }}
                     onClick={drawCard}
+                    className="w-full h-full rounded-2xl bg-gradient-mystical shadow-mystical p-6 flex flex-col items-center justify-center text-primary-foreground relative overflow-hidden group"
+                    aria-label="Draw your daily manifestation card"
                   >
-                    <div className="w-full h-full rounded-2xl bg-gradient-mystical shadow-mystical p-6 flex flex-col items-center justify-center text-primary-foreground relative overflow-hidden group">
-                      {/* Pattern */}
-                      <div className="absolute inset-0 opacity-20">
-                        <div className="absolute inset-0" style={{
-                          backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-                        }} />
-                      </div>
-
-                      <motion.div
-                        animate={{ y: [-5, 5, -5] }}
-                        transition={{ duration: 3, repeat: Infinity }}
-                        className="relative z-10"
-                      >
-                        <Sparkles className="h-16 w-16 mb-6 text-gold" />
-                      </motion.div>
-                      
-                      <h3 className="font-display text-2xl font-medium mb-2 relative z-10">
-                        Tap to Draw
-                      </h3>
-                      <p className="text-sm text-primary-foreground/70 relative z-10">
-                        Your AI-generated guidance awaits
-                      </p>
-
-                      <div className="absolute inset-0 bg-gold/0 group-hover:bg-gold/10 transition-colors" />
-                    </div>
-                  </motion.div>
+                    <div className="absolute inset-0 opacity-20" style={{
+                      backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+                    }} />
+                    <motion.div
+                      animate={{ y: [-5, 5, -5] }}
+                      transition={{ duration: 3, repeat: Infinity }}
+                      className="relative z-10"
+                    >
+                      <Sparkles className="h-16 w-16 mb-6 text-gold" />
+                    </motion.div>
+                    <h3 className="font-display text-2xl font-medium mb-2 relative z-10">Tap to Draw</h3>
+                    <p className="text-sm text-primary-foreground/80 relative z-10">
+                      Your AI-generated guidance awaits
+                    </p>
+                    <div className="absolute inset-0 bg-gold/0 group-hover:bg-gold/10 transition-colors" />
+                  </motion.button>
                 ) : isGenerating ? (
-                  // Loading State
                   <motion.div
                     key="loading"
-                    initial={{ opacity: 0, rotateY: -180 }}
-                    animate={{ opacity: 1, rotateY: 0 }}
-                    transition={{ duration: 0.6 }}
-                    className="w-full h-full"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.4 }}
+                    className="w-full h-full rounded-2xl bg-gradient-mystical shadow-mystical flex flex-col items-center justify-center text-primary-foreground"
                   >
-                    <div className="w-full h-full rounded-2xl bg-gradient-mystical shadow-mystical flex flex-col items-center justify-center text-white">
-                      <Loader2 className="h-12 w-12 animate-spin mb-4 text-gold" />
-                      <p className="font-display text-lg">Creating your card...</p>
-                      <p className="text-sm opacity-70 mt-2">AI is painting your mystical cat</p>
-                    </div>
+                    <Loader2 className="h-12 w-12 animate-spin mb-4 text-gold" />
+                    <p className="font-display text-lg">Painting your card...</p>
+                    <p className="text-sm text-primary-foreground/80 mt-2">This takes ~10 seconds</p>
                   </motion.div>
                 ) : generatedCard?.card ? (
-                  // Card Front - Revealed
                   <motion.div
                     key="front"
-                    initial={{ opacity: 0, rotateY: -180 }}
+                    initial={{ opacity: 0, rotateY: -90 }}
                     animate={{ opacity: 1, rotateY: 0 }}
                     transition={{ duration: 0.6 }}
-                    className="w-full h-full"
+                    className="w-full h-full rounded-2xl shadow-mystical overflow-hidden bg-card"
                   >
-                    <div className="w-full h-full rounded-2xl shadow-mystical overflow-hidden relative bg-card">
-                      {/* AI Generated Image */}
-                      {generatedCard.imageUrl ? (
-                        <div className="h-1/2 w-full relative">
-                          <img 
-                            src={generatedCard.imageUrl} 
-                            alt={`Tarot card: ${generatedCard.card.title}`}
-                            className="w-full h-full object-cover"
-                          />
-                          <div className="absolute top-2 right-2 text-2xl bg-black/30 rounded-full w-10 h-10 flex items-center justify-center">
-                            {elementIcons[generatedCard.card.element]}
-                          </div>
-                          <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-3">
-                            <span className="text-xs font-medium text-white/80 bg-white/20 px-2 py-1 rounded-full">
-                              {generatedCard.card.category}
-                            </span>
-                          </div>
-                        </div>
-                      ) : (
-                        <div className={`h-1/2 w-full bg-gradient-to-br ${elementColors[generatedCard.card.element]} flex items-center justify-center relative`}>
-                          <div className="absolute top-2 right-2 text-2xl">
-                            {elementIcons[generatedCard.card.element]}
-                          </div>
-                          <div className="text-center text-white">
-                            <Sparkles className="h-12 w-12 mx-auto mb-2" />
-                            <span className="text-xs bg-white/20 px-2 py-1 rounded-full">
-                              {generatedCard.card.category}
-                            </span>
-                          </div>
-                        </div>
-                      )}
-
-                      {/* Card Content */}
-                      <div className="h-1/2 p-4 flex flex-col justify-center text-center">
-                        <h3 className="font-display text-xl font-bold text-foreground mb-2">
-                          {generatedCard.card.title}
-                        </h3>
-                        <p className="text-sm text-muted-foreground leading-relaxed">
-                          "{generatedCard.card.message}"
-                        </p>
+                    {generatedCard.imageUrl ? (
+                      <img
+                        src={generatedCard.imageUrl}
+                        alt={`Tarot card: ${generatedCard.card.title}`}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex flex-col items-center justify-center p-6 text-center bg-gradient-mystical text-primary-foreground">
+                        <Sparkles className="h-12 w-12 mb-3 text-gold" />
+                        <h3 className="font-display text-3xl font-bold">{generatedCard.card.title}</h3>
+                        <p className="text-sm mt-2 opacity-80">Image unavailable</p>
                       </div>
-                    </div>
+                    )}
                   </motion.div>
                 ) : null}
               </AnimatePresence>
             </div>
+
+            {/* Description under the card */}
+            {hasDrawn && !isGenerating && generatedCard?.card && (
+              <motion.div
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 }}
+                className="mt-6 max-w-md text-center"
+              >
+                <p className="text-xs uppercase tracking-widest text-muted-foreground mb-2">
+                  {generatedCard.card.category}
+                </p>
+                <p className="font-display text-xl text-foreground leading-relaxed">
+                  "{generatedCard.card.message}"
+                </p>
+              </motion.div>
+            )}
           </div>
 
           {/* Actions */}
@@ -197,25 +168,22 @@ export default function DailyCardWidget() {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
-              className="flex flex-wrap justify-center gap-4 mt-8"
+              transition={{ delay: 0.5 }}
+              className="flex flex-wrap justify-center gap-3 mt-8"
             >
-              <Button
-                variant="outline"
-                onClick={handleReset}
-                className="gap-2"
-              >
+              <Button variant="outline" onClick={handleReset} className="gap-2">
                 <RotateCcw className="h-4 w-4" />
                 Draw Again
               </Button>
+              {generatedCard.imageUrl && (
+                <Button variant="gold" onClick={handleDownload} className="gap-2">
+                  <Download className="h-4 w-4" />
+                  Download
+                </Button>
+              )}
               <Button variant="secondary" onClick={handleShare} className="gap-2">
                 <Share2 className="h-4 w-4" />
-                Share Card
-              </Button>
-              <Button variant="gold" asChild>
-                <Link to="/shop?category=cards">
-                  Get the Full Deck
-                </Link>
+                Share
               </Button>
             </motion.div>
           )}
