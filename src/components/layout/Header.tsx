@@ -29,7 +29,7 @@ export default function Header() {
   const location = useLocation();
   return <header className="sticky top-0 z-50 bg-background/60 backdrop-blur-md border-b border-border/50">
       <nav className="container mx-auto px-4 sm:px-6 lg:px-8" aria-label="Global">
-        <div className="flex items-center justify-between h-20 lg:h-24">
+        <div className="flex items-center justify-between h-16 lg:h-24">
           {/* Left - Desktop Navigation */}
           <div className="hidden lg:flex lg:items-center lg:gap-6 flex-1">
             {navigation.map(item => <Link key={item.name} to={item.href} className={`font-body text-sm font-semibold transition-colors relative py-2 ${location.pathname === item.href ? 'text-primary' : 'text-foreground/80 hover:text-foreground'}`}>
@@ -44,8 +44,8 @@ export default function Header() {
           </Button>
 
           {/* Center - Logo */}
-          <Link to="/" className="flex items-center justify-center group absolute left-1/2 -translate-x-1/2">
-            <span className="lg:text-3xl italic text-foreground transition-transform group-hover:scale-105 font-serif font-bold text-center text-lg">
+          <Link to="/" className="flex items-center justify-center group absolute left-1/2 -translate-x-1/2 max-w-[55%] lg:max-w-none">
+            <span className="lg:text-3xl italic text-foreground transition-transform group-hover:scale-105 font-serif font-bold text-center text-sm sm:text-base whitespace-nowrap">
               Manifesting Works
             </span>
           </Link>
@@ -100,7 +100,7 @@ export default function Header() {
               </div>
               <div className="p-6">
                 <div className="space-y-4">
-                  {navigation.map(item => <Link key={item.name} to={item.href} className={`block font-body text-lg font-medium py-2 transition-colors ${location.pathname === item.href ? 'text-gold' : 'text-foreground hover:text-gold'}`} onClick={() => setMobileMenuOpen(false)}>
+                  {navigation.map(item => <Link key={item.name} to={item.href} className={`flex items-center min-h-[44px] font-body text-lg font-medium py-3 transition-colors ${location.pathname === item.href ? 'text-gold' : 'text-foreground hover:text-gold'}`} onClick={() => setMobileMenuOpen(false)}>
                       {item.name}
                     </Link>)}
                 </div>

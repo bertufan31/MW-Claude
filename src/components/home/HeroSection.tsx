@@ -54,7 +54,7 @@ export default function HeroSection() {
               <span className="block text-gradient-gold">Dreams Into Reality</span>
             </h1>
 
-            <p className="text-lg text-primary-foreground/80 mb-8 max-w-xl mx-auto lg:mx-0 font-body">
+            <p className="text-lg text-primary-foreground/95 mb-8 max-w-xl mx-auto lg:mx-0 font-body">
               Curated spiritual tools, crystals, and manifestation essentials to align your energy 
               with your deepest desires. Welcome to your transformation.
             </p>
@@ -84,7 +84,7 @@ export default function HeroSection() {
               <div className="flex items-center gap-1">
                 {[...Array(5)].map((_, i) => <Star key={i} className="h-4 w-4 fill-gold text-gold" />)}
               </div>
-              <span className="text-primary-foreground/70 text-sm">
+              <span className="text-primary-foreground/90 text-sm">
                 500+ Happy Manifestors
               </span>
             </motion.div>
@@ -123,7 +123,7 @@ export default function HeroSection() {
               </p>
 
               <div className="flex items-center justify-center gap-3 mb-6">
-                <span className="text-2xl font-bold text-gold">$79.99</span>
+                <span className="text-2xl font-bold text-foreground">$79.99</span>
                 <span className="text-lg text-muted-foreground line-through">$99.99</span>
                 <span className="px-2 py-1 rounded-full bg-sage/20 text-sage text-xs font-medium">
                   Save 20%
