@@ -15,17 +15,17 @@ export default {
   	extend: {
   		fontFamily: {
   			display: [
-  				'Gowun Batang',
+  				'Fraunces',
   				'Georgia',
   				'serif'
   			],
   			body: [
-  				'Mohave',
+  				'Inter',
   				'system-ui',
   				'sans-serif'
   			],
   			sans: [
-  				'Poppins',
+  				'Inter',
   				'ui-sans-serif',
   				'system-ui',
   				'-apple-system',
@@ -34,28 +34,13 @@ export default {
   				'Roboto',
   				'Helvetica Neue',
   				'Arial',
-  				'Noto Sans',
   				'sans-serif'
   			],
   			serif: [
-  				'Merriweather',
+  				'Fraunces',
   				'ui-serif',
   				'Georgia',
-  				'Cambria',
-  				'Times New Roman',
-  				'Times',
   				'serif'
-  			],
-  			mono: [
-  				'JetBrains Mono',
-  				'ui-monospace',
-  				'SFMono-Regular',
-  				'Menlo',
-  				'Monaco',
-  				'Consolas',
-  				'Liberation Mono',
-  				'Courier New',
-  				'monospace'
   			]
   		},
   		colors: {

@@ -50,7 +50,7 @@ export default function Newsletter() {
             Join the Manifestation Circle
           </h2>
           
-          <p className="text-primary-foreground/80 mb-8">
+          <p className="text-primary-foreground/95 mb-8">
             Receive weekly manifestation tips, exclusive offers, new moon rituals, 
             and be the first to know about new products.
           </p>
@@ -63,7 +63,7 @@ export default function Newsletter() {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Enter your email"
                 required
-                className="flex-1 px-5 py-3 rounded-lg bg-primary-foreground/10 border border-primary-foreground/20 text-primary-foreground placeholder:text-primary-foreground/50 focus:outline-none focus:border-gold font-body"
+                className="flex-1 px-5 py-3 rounded-lg bg-primary-foreground/10 border border-primary-foreground/20 text-primary-foreground placeholder:text-primary-foreground/75 focus:outline-none focus:border-gold font-body"
               />
               <Button type="submit" variant="gold" size="lg" className="gap-2">
                 Subscribe
@@ -81,7 +81,7 @@ export default function Newsletter() {
             </motion.div>
           )}
 
-          <p className="text-sm text-primary-foreground/60 mt-4">
+          <p className="text-sm text-primary-foreground/85 mt-4">
             No spam, just magic. Unsubscribe anytime.
           </p>
         </motion.div>

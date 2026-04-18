@@ -58,8 +58,8 @@ export default function ProductCard({ product }: ProductCardProps) {
             )}
           </div>
 
-          {/* Quick Add Button */}
-          <div className="absolute inset-x-3 bottom-3 opacity-0 translate-y-2 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0">
+          {/* Quick Add Button - always visible on mobile, hover-reveal on desktop */}
+          <div className="absolute inset-x-3 bottom-3 opacity-100 translate-y-0 transition-all duration-300 lg:opacity-0 lg:translate-y-2 lg:group-hover:opacity-100 lg:group-hover:translate-y-0">
             <Button
               variant="default"
               size="sm"
@@ -74,14 +74,14 @@ export default function ProductCard({ product }: ProductCardProps) {
 
         {/* Product Info */}
         <div className="space-y-1">
-          <h3 className="font-display text-lg font-medium group-hover:text-lavender transition-colors line-clamp-1">
+          <h3 className="font-display text-lg font-medium group-hover:text-primary transition-colors line-clamp-1">
             {product.name}
           </h3>
           <p className="text-muted-foreground text-sm line-clamp-2">
             {product.description}
           </p>
           <div className="flex items-center gap-2 pt-1">
-            <span className="font-semibold text-lavender">${product.price.toFixed(2)}</span>
+            <span className="font-semibold text-primary">${product.price.toFixed(2)}</span>
             {product.originalPrice && (
               <span className="text-sm text-muted-foreground line-through">
                 ${product.originalPrice.toFixed(2)}
