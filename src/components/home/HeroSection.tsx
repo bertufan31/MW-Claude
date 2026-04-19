@@ -109,7 +109,7 @@ export default function HeroSection() {
               </div>
 
               {/* Product Image */}
-              <div className="h-40 sm:h-48 lg:h-56 xl:h-64 rounded-2xl bg-secondary mt-4 mb-3 overflow-hidden">
+              <div className="aspect-[4/3] w-full rounded-2xl bg-secondary mt-4 mb-3 overflow-hidden">
                 <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-celestial/20 to-gold/20">
                   <Sparkles className="h-12 w-12 lg:h-16 lg:w-16 text-gold/50" />
                 </div>
