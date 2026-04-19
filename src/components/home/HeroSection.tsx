@@ -100,18 +100,18 @@ export default function HeroSection() {
         }} transition={{
           duration: 0.8,
           delay: 0.3
-        }} className="relative flex flex-col" style={{ maxHeight: 'calc(100vh - 7rem)' }}>
-            <div className="relative bg-gradient-card rounded-3xl p-5 lg:p-6 shadow-mystical flex flex-col overflow-hidden" style={{ maxHeight: 'calc(100vh - 7rem)' }}>
+        }} className="relative">
+            <div className="relative bg-gradient-card rounded-3xl p-5 lg:p-6 shadow-mystical">
               {/* Badge */}
               <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-2 rounded-full bg-gold text-gold-foreground text-sm font-semibold flex items-center gap-2 shadow-lg whitespace-nowrap z-10">
                 <Star className="h-4 w-4 fill-current" />
                 Best Seller
               </div>
 
-              {/* Product Image — grows to fill available space, stays square */}
-              <div className="flex-1 min-h-0 rounded-2xl bg-secondary mt-4 mb-3 overflow-hidden">
+              {/* Product Image */}
+              <div className="h-40 sm:h-48 lg:h-56 xl:h-64 rounded-2xl bg-secondary mt-4 mb-3 overflow-hidden">
                 <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-celestial/20 to-gold/20">
-                  <Sparkles className="h-14 w-14 lg:h-20 lg:w-20 text-gold/50" />
+                  <Sparkles className="h-12 w-12 lg:h-16 lg:w-16 text-gold/50" />
                 </div>
               </div>
 
@@ -130,7 +130,7 @@ export default function HeroSection() {
                 </span>
               </div>
 
-              <Button variant="gold" size="lg" className="w-full shrink-0" asChild>
+              <Button variant="gold" size="lg" className="w-full" asChild>
                 <Link to="/product/starter-pack">
                   View Bundle
                 </Link>
