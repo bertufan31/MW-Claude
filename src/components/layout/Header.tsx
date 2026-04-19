@@ -45,8 +45,20 @@ export default function Header() {
 
           {/* Center - Logo */}
           <Link to="/" className="flex items-center justify-center group absolute left-1/2 -translate-x-1/2 max-w-[55%] lg:max-w-none">
-            <span className="lg:text-2xl italic text-foreground transition-transform group-hover:scale-105 font-serif font-bold text-center text-sm sm:text-base whitespace-nowrap">
+            <span className="relative lg:text-2xl text-foreground transition-transform group-hover:scale-105 font-serif font-bold text-center text-sm sm:text-base whitespace-nowrap">
               Manifesting Works
+              <motion.span
+                className="absolute inset-0 text-gradient-gold"
+                animate={{ opacity: [0, 0, 1, 1, 0] }}
+                transition={{
+                  duration: 8,
+                  repeat: Infinity,
+                  times: [0, 0.6, 0.75, 0.88, 1],
+                  ease: 'easeInOut',
+                }}
+              >
+                Manifesting Works
+              </motion.span>
             </span>
           </Link>
 
