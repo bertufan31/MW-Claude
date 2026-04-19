@@ -16,7 +16,7 @@ export default function ProductDetail() {
   const product = getProductById(id || '');
   const { addItem } = useCart();
   const [quantity, setQuantity] = useState(1);
-  const [selectedImage, setSelectedImage] = useState(0);
+  const [selectedItem, setSelectedItem] = useState<'video' | number>(product.video ? 'video' : 0);
   const [isAdded, setIsAdded] = useState(false);
 
   if (!product) {
@@ -79,11 +79,22 @@ export default function ProductDetail() {
               transition={{ duration: 0.5 }}
             >
               <div className="relative aspect-square rounded-2xl overflow-hidden bg-muted mb-4">
-                <img
-                  src={getAssetUrl(product.images[selectedImage] || product.image)}
-                  alt={product.name}
-                  className="w-full h-full object-cover"
-                />
+                {selectedItem === 'video' && product.video ? (
+                  <video
+                    src={getAssetUrl(product.video)}
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <img
+                    src={getAssetUrl(product.images[selectedItem as number] || product.image)}
+                    alt={product.name}
+                    className="w-full h-full object-cover"
+                  />
+                )}
                 {/* Badges */}
                 <div className="absolute top-4 left-4 flex flex-col gap-2">
                   {product.bestseller && (
@@ -101,15 +112,26 @@ export default function ProductDetail() {
               </div>
 
               {/* Thumbnail Gallery */}
-              {product.images.length > 1 && (
+              {(product.video || product.images.length > 1) && (
                 <div className="flex gap-3">
+                  {product.video && (
+                    <button
+                      onClick={() => setSelectedItem('video')}
+                      className={`w-20 h-20 rounded-lg overflow-hidden border-2 transition-colors relative ${selectedItem === 'video' ? 'border-lavender' : 'border-transparent'}`}
+                    >
+                      <video src={getAssetUrl(product.video)} className="w-full h-full object-cover" muted />
+                      <div className="absolute inset-0 flex items-center justify-center bg-black/30">
+                        <div className="w-6 h-6 rounded-full bg-white/90 flex items-center justify-center">
+                          <div className="w-0 h-0 border-t-[5px] border-t-transparent border-l-[9px] border-l-foreground border-b-[5px] border-b-transparent ml-0.5" />
+                        </div>
+                      </div>
+                    </button>
+                  )}
                   {product.images.map((img, index) => (
                     <button
                       key={index}
-                      onClick={() => setSelectedImage(index)}
-                      className={`w-20 h-20 rounded-lg overflow-hidden border-2 transition-colors ${
-                        selectedImage === index ? 'border-lavender' : 'border-transparent'
-                      }`}
+                      onClick={() => setSelectedItem(index)}
+                      className={`w-20 h-20 rounded-lg overflow-hidden border-2 transition-colors ${selectedItem === index ? 'border-lavender' : 'border-transparent'}`}
                     >
                       <img
                         src={getAssetUrl(img)}

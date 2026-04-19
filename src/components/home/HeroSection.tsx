@@ -1,7 +1,8 @@
 import { motion } from 'framer-motion';
-import { ArrowRight, Sparkles, Star } from 'lucide-react';
+import { ArrowRight, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
+import { getAssetUrl } from '@/lib/utils';
 export default function HeroSection() {
   return <section className="relative overflow-hidden bg-gradient-celestial min-h-[90vh] flex items-center">
       {/* Decorative Elements */}
@@ -108,11 +109,16 @@ export default function HeroSection() {
                 Best Seller
               </div>
 
-              {/* Product Image */}
+              {/* Product Video */}
               <div className="aspect-[4/3] w-full rounded-2xl bg-secondary mt-4 mb-3 overflow-hidden">
-                <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-celestial/20 to-gold/20">
-                  <Sparkles className="h-12 w-12 lg:h-16 lg:w-16 text-gold/50" />
-                </div>
+                <video
+                  src={getAssetUrl('/products/starter-pack/video1.mp4')}
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  className="w-full h-full object-cover"
+                />
               </div>
 
               <h3 className="font-display text-lg lg:text-xl font-medium text-center mb-1">

@@ -7,6 +7,7 @@ export interface Product {
   originalPrice?: number;
   image: string;
   images: string[];
+  video?: string;
   category: 'crystals' | 'sage' | 'palo-santo' | 'vases' | 'cards' | 'bundles';
   featured?: boolean;
   bestseller?: boolean;
@@ -26,6 +27,7 @@ export const products: Product[] = [
     originalPrice: 99.99,
     image: '/products/starter-pack/1.jpeg',
     images: ['/products/starter-pack/1.jpeg', '/products/starter-pack/2.jpeg', '/products/starter-pack/3.jpeg'],
+    video: '/products/starter-pack/video1.mp4',
     category: 'bundles',
     featured: true,
     bestseller: true,
