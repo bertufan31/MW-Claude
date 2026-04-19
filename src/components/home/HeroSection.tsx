@@ -102,7 +102,7 @@ export default function HeroSection() {
           duration: 0.8,
           delay: 0.3
         }} className="relative">
-            <div className="relative bg-gradient-card rounded-3xl p-5 lg:p-6 shadow-mystical">
+            <div className="relative bg-gradient-card rounded-3xl p-5 lg:p-7 shadow-mystical">
               {/* Badge */}
               <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-2 rounded-full bg-gold text-gold-foreground text-sm font-semibold flex items-center gap-2 shadow-lg whitespace-nowrap z-10">
                 <Star className="h-4 w-4 fill-current" />
@@ -129,8 +129,8 @@ export default function HeroSection() {
               </p>
 
               <div className="flex items-center justify-center gap-3 mb-3">
-                <span className="text-xl font-bold text-foreground">£12</span>
-                <span className="text-base text-muted-foreground line-through">£18</span>
+                <span className="font-display text-xl font-bold text-foreground">£12</span>
+                <span className="font-display text-base text-muted-foreground line-through">£18</span>
                 <span className="px-2 py-1 rounded-full bg-sage/20 text-sage text-xs font-medium">
                   Save 33%
                 </span>
