@@ -13,12 +13,11 @@ serve(async (req) => {
   try {
     const { title, category, element } = await req.json();
 
-    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
-    if (!LOVABLE_API_KEY) {
-      throw new Error("LOVABLE_API_KEY is not configured");
+    const GOOGLE_API_KEY = Deno.env.get("GOOGLE_API_KEY");
+    if (!GOOGLE_API_KEY) {
+      throw new Error("GOOGLE_API_KEY is not configured");
     }
 
-    // Element-driven palette hints to keep variety while staying cohesive
     const palettes: Record<string, string> = {
       fire: "warm terracotta, burnt orange, deep red, golden ochre, cream background",
       water: "teal, soft blue, coral red accents, off-white background",
@@ -27,9 +26,7 @@ serve(async (req) => {
       spirit: "muted indigo, antique gold, terracotta accents, cream background",
     };
 
-    // Vintage tarot illustration prompt — full-bleed art with the title word
-    // integrated into a banner inside the card itself (not overlaid by UI).
-    const prompt = `A vintage hand-drawn tarot card illustration, vertical 3:4 portrait composition, full-bleed artwork that fills the entire frame. The card features an expressive, charming cat as the central character — stylized in a vintage woodcut / linocut / Art Nouveau storybook style with bold black inked outlines, hand-textured shading, slight paper grain, and subtly aged edges. The cat embodies the concept of "${title}" through its pose, expression, and the symbolic objects around it (props, plants, herbs, flowers, celestial elements relevant to "${title}"). 
+    const prompt = `A vintage hand-drawn tarot card illustration, vertical 3:4 portrait composition, full-bleed artwork that fills the entire frame. The card features an expressive, charming cat as the central character — stylized in a vintage woodcut / linocut / Art Nouveau storybook style with bold black inked outlines, hand-textured shading, slight paper grain, and subtly aged edges. The cat embodies the concept of "${title}" through its pose, expression, and the symbolic objects around it (props, plants, herbs, flowers, celestial elements relevant to "${title}").
 
 Surround the scene with an ornate decorative border featuring botanical and mystical motifs (vines, flowers, sacred geometry, small symbols). At the bottom of the card, integrate a horizontal scroll/banner ribbon containing ONLY the single word "${title.toUpperCase()}" in bold vintage serif typography (clean, large, perfectly spelled — no extra letters, no typos, no other words anywhere on the card).
 
@@ -37,23 +34,17 @@ Color palette: ${palettes[element] || palettes.spirit}. Slightly desaturated, vi
 
     console.log("Generating tarot card image for:", title);
 
-    const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${LOVABLE_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        model: "google/gemini-2.5-flash-image-preview",
-        messages: [
-          {
-            role: "user",
-            content: prompt,
-          },
-        ],
-        modalities: ["image", "text"],
-      }),
-    });
+    const response = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp-image-generation:generateContent?key=${GOOGLE_API_KEY}`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          contents: [{ role: "user", parts: [{ text: prompt }] }],
+          generationConfig: { responseModalities: ["IMAGE", "TEXT"] },
+        }),
+      }
+    );
 
     if (!response.ok) {
       if (response.status === 429) {
@@ -62,26 +53,25 @@ Color palette: ${palettes[element] || palettes.spirit}. Slightly desaturated, vi
           { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" } }
         );
       }
-      if (response.status === 402) {
-        return new Response(
-          JSON.stringify({ error: "Usage limit reached. Please check your Lovable AI credits." }),
-          { status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-        );
-      }
       const errorText = await response.text();
-      console.error("AI gateway error:", response.status, errorText);
-      throw new Error(`AI gateway error: ${response.status}`);
+      console.error("Google AI error:", response.status, errorText);
+      throw new Error(`Google AI error: ${response.status}`);
     }
 
     const data = await response.json();
     console.log("AI response received");
 
-    const imageUrl = data.choices?.[0]?.message?.images?.[0]?.image_url?.url;
+    const imagePart = data.candidates?.[0]?.content?.parts?.find(
+      (p: { inlineData?: { mimeType: string; data: string } }) => p.inlineData
+    );
 
-    if (!imageUrl) {
+    if (!imagePart?.inlineData) {
       console.error("No image in response:", JSON.stringify(data));
       throw new Error("No image generated");
     }
+
+    const { mimeType, data: base64Data } = imagePart.inlineData;
+    const imageUrl = `data:${mimeType};base64,${base64Data}`;
 
     return new Response(
       JSON.stringify({ imageUrl }),
