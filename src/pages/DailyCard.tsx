@@ -128,10 +128,10 @@ export default function DailyCard() {
                         {/* AI Generated Image or Fallback */}
                         {generatedCard.imageUrl ? (
                           <div className="h-1/2 relative">
-                            <img 
-                              src={generatedCard.imageUrl} 
+                            <img
+                              src={generatedCard.imageUrl}
                               alt={`Tarot card: ${generatedCard.card.title}`}
-                              className="w-full h-full object-cover"
+                              className="absolute inset-0 w-full h-full object-cover"
                             />
                             <div className="absolute top-3 right-3 text-2xl bg-black/40 rounded-full w-10 h-10 flex items-center justify-center">
                               {elementIcons[generatedCard.card.element]}

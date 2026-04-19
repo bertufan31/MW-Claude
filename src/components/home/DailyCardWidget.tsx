@@ -125,13 +125,13 @@ export default function DailyCardWidget() {
                     initial={{ opacity: 0, rotateY: -90 }}
                     animate={{ opacity: 1, rotateY: 0 }}
                     transition={{ duration: 0.6 }}
-                    className="w-full h-full rounded-2xl shadow-mystical overflow-hidden bg-card"
+                    className="relative w-full h-full rounded-2xl shadow-mystical overflow-hidden bg-card"
                   >
                     {generatedCard.imageUrl ? (
                       <img
                         src={generatedCard.imageUrl}
                         alt={`Tarot card: ${generatedCard.card.title}`}
-                        className="w-full h-full object-cover"
+                        className="absolute inset-0 w-full h-full object-cover"
                       />
                     ) : (
                       <div className="w-full h-full flex flex-col items-center justify-center p-6 text-center bg-gradient-mystical text-primary-foreground">
