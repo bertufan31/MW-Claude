@@ -9,7 +9,7 @@ import { toast } from '@/hooks/use-toast';
 
 export default function DailyCardWidget() {
   const [hasDrawn, setHasDrawn] = useState(false);
-  const { isGenerating, generatedCard, generateCard, reset } = useTarotCardGenerator();
+  const { isGenerating, generatedCard, generateCard, reset, error } = useTarotCardGenerator();
   const cardBoxRef = useRef<HTMLDivElement>(null);
 
   const drawCard = async () => {
@@ -157,6 +157,7 @@ export default function DailyCardWidget() {
                         <Sparkles className="h-12 w-12 mb-3 text-gold" />
                         <h3 className="font-display text-3xl font-bold">{generatedCard.card.title}</h3>
                         <p className="text-sm mt-2 opacity-80">Image unavailable</p>
+                        {error && <p className="text-xs mt-2 opacity-60 break-all">{error}</p>}
                       </div>
                     )}
                   </motion.div>
