@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ShoppingBag, Minus, Plus, Check, Star, ChevronLeft, Package, Sparkles, X } from 'lucide-react';
+import { ShoppingBag, Minus, Plus, Check, Star, ChevronLeft, ChevronRight, Package, Sparkles, X } from 'lucide-react';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import { Button } from '@/components/ui/button';
@@ -18,8 +18,29 @@ export default function ProductDetail() {
   const [quantity, setQuantity] = useState(1);
   const [selectedItem, setSelectedItem] = useState<'video' | number>(product?.video ? 'video' : 0);
   const [isAdded, setIsAdded] = useState(false);
-  const [lightboxSrc, setLightboxSrc] = useState<string | null>(null);
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 });
+
+  const mediaItems = [
+    ...(product?.video ? [{ type: 'video' as const, src: product.video }] : []),
+    ...(product?.images ?? []).map(img => ({ type: 'image' as const, src: img })),
+  ];
+
+  const openLightbox = (index: number) => setLightboxIndex(index);
+  const closeLightbox = () => setLightboxIndex(null);
+  const prevMedia = useCallback(() => setLightboxIndex(i => i === null ? null : (i - 1 + mediaItems.length) % mediaItems.length), [mediaItems.length]);
+  const nextMedia = useCallback(() => setLightboxIndex(i => i === null ? null : (i + 1) % mediaItems.length), [mediaItems.length]);
+
+  useEffect(() => {
+    if (lightboxIndex === null) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowLeft') prevMedia();
+      else if (e.key === 'ArrowRight') nextMedia();
+      else if (e.key === 'Escape') closeLightbox();
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [lightboxIndex, prevMedia, nextMedia]);
 
   if (!product) {
     return (
@@ -88,14 +109,15 @@ export default function ProductDetail() {
                     loop
                     muted
                     playsInline
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover cursor-zoom-in"
+                    onClick={() => openLightbox(0)}
                   />
                 ) : (
                   <img
                     src={getAssetUrl(product.images[selectedItem as number] || product.image)}
                     alt={product.name}
                     className="w-full h-full object-cover cursor-zoom-in"
-                    onClick={() => setLightboxSrc(getAssetUrl(product.images[selectedItem as number] || product.image))}
+                    onClick={() => openLightbox((product.video ? 1 : 0) + (selectedItem as number))}
                   />
                 )}
                 {/* Badges */}
@@ -280,25 +302,79 @@ export default function ProductDetail() {
 
       {/* Lightbox */}
       <AnimatePresence>
-        {lightboxSrc && (
+        {lightboxIndex !== null && mediaItems[lightboxIndex] && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-0 z-50 bg-black/85 flex items-center justify-center cursor-none"
-            onClick={() => setLightboxSrc(null)}
+            className="fixed inset-0 z-50 bg-black/88 flex items-center justify-center cursor-none"
+            onClick={closeLightbox}
             onMouseMove={(e) => setCursorPos({ x: e.clientX, y: e.clientY })}
           >
-            <motion.img
-              src={lightboxSrc}
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              transition={{ duration: 0.2 }}
-              className="max-h-[90vh] max-w-[90vw] object-contain rounded-xl shadow-2xl"
-              onClick={(e) => e.stopPropagation()}
-            />
+            {/* Media */}
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={lightboxIndex}
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                transition={{ duration: 0.18 }}
+                className="max-h-[90vh] max-w-[90vw]"
+                onClick={(e) => e.stopPropagation()}
+              >
+                {mediaItems[lightboxIndex].type === 'video' ? (
+                  <video
+                    src={getAssetUrl(mediaItems[lightboxIndex].src)}
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    className="max-h-[90vh] max-w-[90vw] rounded-xl shadow-2xl object-contain"
+                  />
+                ) : (
+                  <img
+                    src={getAssetUrl(mediaItems[lightboxIndex].src)}
+                    alt={product.name}
+                    className="max-h-[90vh] max-w-[90vw] object-contain rounded-xl shadow-2xl"
+                  />
+                )}
+              </motion.div>
+            </AnimatePresence>
+
+            {/* Prev button */}
+            {mediaItems.length > 1 && (
+              <button
+                className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center text-white hover:bg-white/20 transition-colors z-10"
+                onClick={(e) => { e.stopPropagation(); prevMedia(); }}
+              >
+                <ChevronLeft className="h-6 w-6" />
+              </button>
+            )}
+
+            {/* Next button */}
+            {mediaItems.length > 1 && (
+              <button
+                className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center text-white hover:bg-white/20 transition-colors z-10"
+                onClick={(e) => { e.stopPropagation(); nextMedia(); }}
+              >
+                <ChevronRight className="h-6 w-6" />
+              </button>
+            )}
+
+            {/* Dot indicators */}
+            {mediaItems.length > 1 && (
+              <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2" onClick={(e) => e.stopPropagation()}>
+                {mediaItems.map((_, i) => (
+                  <button
+                    key={i}
+                    onClick={(e) => { e.stopPropagation(); setLightboxIndex(i); }}
+                    className={`w-2 h-2 rounded-full transition-colors ${i === lightboxIndex ? 'bg-white' : 'bg-white/40'}`}
+                  />
+                ))}
+              </div>
+            )}
+
             {/* Custom X cursor */}
             <div
               className="fixed pointer-events-none z-50 -translate-x-1/2 -translate-y-1/2"
