@@ -4,22 +4,19 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ShoppingBag, Menu, X, Instagram, ExternalLink } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useCart } from '@/contexts/CartContext';
-const navigation = [{
-  name: 'Shop',
-  href: '/shop'
-}, {
-  name: 'Daily Card',
-  href: '/daily-card'
-}, {
-  name: 'Blog',
-  href: '/blog'
-}, {
-  name: 'About',
-  href: '/about'
-}, {
-  name: 'Contact',
-  href: '/contact'
-}];
+const navLeft = [
+  { name: 'Home', href: '/' },
+  { name: 'Shop', href: '/shop' },
+  { name: 'Daily Card', href: '/daily-card' },
+  { name: 'Blog', href: '/blog' },
+];
+
+const navRight = [
+  { name: 'About', href: '/about' },
+  { name: 'Contact', href: '/contact' },
+];
+
+const navigation = [...navLeft, ...navRight];
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const {
@@ -32,10 +29,12 @@ export default function Header() {
         <div className="flex items-center justify-between h-16 lg:h-20">
           {/* Left - Desktop Navigation */}
           <div className="hidden lg:flex lg:items-center lg:gap-6 flex-1">
-            {navigation.map(item => <Link key={item.name} to={item.href} className={`font-body text-sm font-semibold transition-colors relative py-2 ${location.pathname === item.href ? 'text-primary' : 'text-foreground/80 hover:text-foreground'}`}>
+            {navLeft.map(item => (
+              <Link key={item.name} to={item.href} className={`font-body text-sm font-semibold transition-colors relative py-2 ${location.pathname === item.href ? 'text-primary' : 'text-foreground/80 hover:text-foreground'}`}>
                 {item.name}
                 {location.pathname === item.href && <motion.div layoutId="activeNav" className="absolute -bottom-px left-0 right-0 h-0.5 bg-primary" />}
-              </Link>)}
+              </Link>
+            ))}
           </div>
 
           {/* Mobile menu button - Left on mobile */}
@@ -64,6 +63,13 @@ export default function Header() {
 
           {/* Right side actions */}
           <div className="flex items-center gap-4 flex-1 justify-end">
+            {/* About & Contact - Desktop only */}
+            {navRight.map(item => (
+              <Link key={item.name} to={item.href} className={`hidden lg:inline-flex font-body text-sm font-semibold transition-colors relative py-2 ${location.pathname === item.href ? 'text-primary' : 'text-foreground/80 hover:text-foreground'}`}>
+                {item.name}
+                {location.pathname === item.href && <motion.div layoutId="activeNav" className="absolute -bottom-px left-0 right-0 h-0.5 bg-primary" />}
+              </Link>
+            ))}
             {/* Etsy Link - Desktop only */}
             <a href="https://etsy.com" target="_blank" rel="noopener noreferrer" className="hidden lg:flex items-center gap-1 text-sm font-semibold text-foreground/80 hover:text-foreground transition-colors">
               <ExternalLink className="h-4 w-4" />
