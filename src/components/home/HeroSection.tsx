@@ -100,37 +100,37 @@ export default function HeroSection() {
         }} transition={{
           duration: 0.8,
           delay: 0.3
-        }} className="relative">
-            <div className="relative bg-gradient-card rounded-3xl p-5 lg:p-8 shadow-mystical">
+        }} className="relative flex flex-col" style={{ maxHeight: 'calc(100vh - 7rem)' }}>
+            <div className="relative bg-gradient-card rounded-3xl p-5 lg:p-6 shadow-mystical flex flex-col overflow-hidden" style={{ maxHeight: 'calc(100vh - 7rem)' }}>
               {/* Badge */}
-              <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-2 rounded-full bg-gold text-gold-foreground text-sm font-semibold flex items-center gap-2 shadow-lg whitespace-nowrap">
+              <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-2 rounded-full bg-gold text-gold-foreground text-sm font-semibold flex items-center gap-2 shadow-lg whitespace-nowrap z-10">
                 <Star className="h-4 w-4 fill-current" />
                 Best Seller
               </div>
 
-              {/* Product Image Placeholder */}
-              <div className="aspect-square rounded-2xl bg-secondary mb-3 lg:mb-5 overflow-hidden">
+              {/* Product Image — grows to fill available space, stays square */}
+              <div className="flex-1 min-h-0 rounded-2xl bg-secondary mt-4 mb-3 overflow-hidden">
                 <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-celestial/20 to-gold/20">
                   <Sparkles className="h-14 w-14 lg:h-20 lg:w-20 text-gold/50" />
                 </div>
               </div>
 
-              <h3 className="font-display text-xl lg:text-2xl font-medium text-center mb-1 lg:mb-2">
+              <h3 className="font-display text-lg lg:text-xl font-medium text-center mb-1">
                 Manifestation Starter Pack
               </h3>
-              <p className="text-muted-foreground text-center text-xs lg:text-sm mb-3">
+              <p className="text-muted-foreground text-center text-xs mb-2 leading-snug">
                 Everything you need to begin: Crystal, Sage, Palo Santo, Vase & Cat Tarot Cards
               </p>
 
-              <div className="flex items-center justify-center gap-3 mb-3 lg:mb-5">
-                <span className="text-xl lg:text-2xl font-bold text-foreground">£12</span>
-                <span className="text-base lg:text-lg text-muted-foreground line-through">£18</span>
+              <div className="flex items-center justify-center gap-3 mb-3">
+                <span className="text-xl font-bold text-foreground">£12</span>
+                <span className="text-base text-muted-foreground line-through">£18</span>
                 <span className="px-2 py-1 rounded-full bg-sage/20 text-sage text-xs font-medium">
-                  Save 20%
+                  Save 33%
                 </span>
               </div>
 
-              <Button variant="gold" size="lg" className="w-full" asChild>
+              <Button variant="gold" size="lg" className="w-full shrink-0" asChild>
                 <Link to="/product/starter-pack">
                   View Bundle
                 </Link>
