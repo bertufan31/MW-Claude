@@ -77,8 +77,8 @@ export default function DailyCardWidget() {
           </motion.div>
 
           <div className="flex flex-col items-center">
-            {/* Card area — 3:4 portrait */}
-            <div className="w-full max-w-sm aspect-[3/4]">
+            {/* Card area */}
+            <div className="w-full max-w-sm">
               <AnimatePresence mode="wait">
                 {!hasDrawn ? (
                   <motion.button
@@ -88,7 +88,7 @@ export default function DailyCardWidget() {
                     exit={{ opacity: 0 }}
                     transition={{ duration: 0.4 }}
                     onClick={drawCard}
-                    className="w-full h-full rounded-2xl bg-gradient-mystical shadow-mystical p-6 flex flex-col items-center justify-center text-primary-foreground relative overflow-hidden group"
+                    className="w-full rounded-2xl overflow-hidden relative group shadow-[0_8px_40px_rgba(0,0,0,0.45)] hover:shadow-[0_12px_50px_rgba(0,0,0,0.55)] transition-shadow duration-300"
                     aria-label="Draw your daily manifestation card"
                   >
                     <video
@@ -97,9 +97,9 @@ export default function DailyCardWidget() {
                       loop
                       muted
                       playsInline
-                      className="absolute inset-0 w-full h-full object-cover rounded-2xl"
+                      className="w-full h-auto block"
                     />
-                    <div className="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-colors duration-500 z-10" />
+                    <div className="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-colors duration-500" />
                   </motion.button>
                 ) : isGenerating ? (
                   <motion.div
@@ -107,7 +107,7 @@ export default function DailyCardWidget() {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ duration: 0.4 }}
-                    className="w-full h-full rounded-2xl bg-gradient-mystical shadow-mystical flex flex-col items-center justify-center text-primary-foreground"
+                    className="w-full aspect-[3/4] rounded-2xl bg-gradient-mystical shadow-mystical flex flex-col items-center justify-center text-primary-foreground"
                   >
                     <Loader2 className="h-12 w-12 animate-spin mb-4 text-gold" />
                     <p className="font-display text-lg">Painting your card...</p>
@@ -119,7 +119,7 @@ export default function DailyCardWidget() {
                     initial={{ opacity: 0, rotateY: -90 }}
                     animate={{ opacity: 1, rotateY: 0 }}
                     transition={{ duration: 0.6 }}
-                    className="relative w-full h-full rounded-2xl shadow-mystical overflow-hidden bg-card"
+                    className="relative w-full aspect-[3/4] rounded-2xl shadow-mystical overflow-hidden bg-card"
                   >
                     {generatedCard.imageUrl ? (
                       <img

@@ -76,55 +76,49 @@ export default function DailyCard() {
         <section className="py-16 md:py-24">
           <div className="container mx-auto px-4">
             <div className="flex flex-col items-center">
-              <div className="relative w-80 h-[480px] perspective-1000 mb-8">
+              <div className="w-80 mb-8">
                 <AnimatePresence mode="wait">
                   {!hasDrawn ? (
                     <motion.div
                       key="back"
-                      initial={{ rotateY: 0 }}
-                      exit={{ rotateY: 180 }}
-                      transition={{ duration: 0.6 }}
-                      className="absolute inset-0 cursor-pointer"
+                      initial={{ opacity: 0, scale: 0.95 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.4 }}
+                      className="cursor-pointer group rounded-2xl overflow-hidden shadow-[0_8px_40px_rgba(0,0,0,0.45)] hover:shadow-[0_12px_50px_rgba(0,0,0,0.55)] transition-shadow duration-300 relative"
                       onClick={drawCard}
-                      style={{ transformStyle: 'preserve-3d' }}
                     >
-                      <div className="w-full h-full group relative overflow-hidden rounded-2xl shadow-xl hover:shadow-2xl transition-shadow border-2 border-primary/20">
-                        <video
-                          src={`${import.meta.env.BASE_URL}zoltar-cat-loop.mp4`}
-                          autoPlay
-                          loop
-                          muted
-                          playsInline
-                          className="absolute inset-0 w-full h-full object-cover"
-                        />
-                        <div className="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-colors duration-500 z-10" />
-                      </div>
+                      <video
+                        src={`${import.meta.env.BASE_URL}zoltar-cat-loop.mp4`}
+                        autoPlay
+                        loop
+                        muted
+                        playsInline
+                        className="w-full h-auto block"
+                      />
+                      <div className="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-colors duration-500" />
                     </motion.div>
                   ) : isGenerating ? (
                     <motion.div
                       key="loading"
-                      initial={{ rotateY: -180 }}
-                      animate={{ rotateY: 0 }}
-                      transition={{ duration: 0.6 }}
-                      className="absolute inset-0"
-                      style={{ transformStyle: 'preserve-3d' }}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ duration: 0.4 }}
+                      className="w-full h-[480px] bg-gradient-to-br from-lavender to-primary rounded-2xl flex flex-col items-center justify-center shadow-xl"
                     >
-                      <div className="w-full h-full bg-gradient-to-br from-lavender to-primary rounded-2xl flex flex-col items-center justify-center shadow-xl">
-                        <Loader2 className="h-16 w-16 text-olive animate-spin mb-4" />
-                        <p className="font-display text-olive text-xl">Creating your card...</p>
-                        <p className="font-body text-olive/70 mt-2">AI is painting your mystical cat</p>
-                      </div>
+                      <Loader2 className="h-16 w-16 text-olive animate-spin mb-4" />
+                      <p className="font-display text-olive text-xl">Creating your card...</p>
+                      <p className="font-body text-olive/70 mt-2">AI is painting your mystical cat</p>
                     </motion.div>
                   ) : generatedCard?.card ? (
                     <motion.div
                       key="front"
-                      initial={{ rotateY: -180 }}
-                      animate={{ rotateY: 0 }}
+                      initial={{ opacity: 0, rotateY: -90 }}
+                      animate={{ opacity: 1, rotateY: 0 }}
                       transition={{ duration: 0.6 }}
-                      className="absolute inset-0"
-                      style={{ transformStyle: 'preserve-3d' }}
+                      className="w-full"
                     >
-                      <div className="w-full h-full bg-card rounded-2xl overflow-hidden shadow-xl">
+                      <div className="w-full h-[480px] bg-card rounded-2xl overflow-hidden shadow-xl">
                         {/* AI Generated Image or Fallback */}
                         {generatedCard.imageUrl ? (
                           <div className="h-1/2 relative">
