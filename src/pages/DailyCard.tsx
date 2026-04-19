@@ -89,17 +89,14 @@ export default function DailyCard() {
                       style={{ transformStyle: 'preserve-3d' }}
                     >
                       <div className="w-full h-full group relative overflow-hidden rounded-2xl shadow-xl hover:shadow-2xl transition-shadow border-2 border-primary/20">
-                        <motion.div
-                          animate={{ scale: [1, 1.02, 1] }}
-                          transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                          className="absolute inset-0 z-0"
-                        >
-                          <img 
-                            src="/pull-your-card.png" 
-                            alt="Pull Your Card" 
-                            className="w-full h-full object-cover" 
-                          />
-                        </motion.div>
+                        <video
+                          src="/zoltar cat loop.mp4"
+                          autoPlay
+                          loop
+                          muted
+                          playsInline
+                          className="absolute inset-0 w-full h-full object-cover"
+                        />
                         <div className="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-colors duration-500 z-10" />
                       </div>
                     </motion.div>

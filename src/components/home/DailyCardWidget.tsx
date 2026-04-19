@@ -91,17 +91,14 @@ export default function DailyCardWidget() {
                     className="w-full h-full rounded-2xl bg-gradient-mystical shadow-mystical p-6 flex flex-col items-center justify-center text-primary-foreground relative overflow-hidden group"
                     aria-label="Draw your daily manifestation card"
                   >
-                    <motion.div
-                      animate={{ scale: [1, 1.02, 1] }}
-                      transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                      className="absolute inset-0 z-0"
-                    >
-                      <img 
-                        src="/pull-your-card.png" 
-                        alt="Pull Your Card" 
-                        className="w-full h-full object-cover rounded-2xl" 
-                      />
-                    </motion.div>
+                    <video
+                      src="/zoltar cat loop.mp4"
+                      autoPlay
+                      loop
+                      muted
+                      playsInline
+                      className="absolute inset-0 w-full h-full object-cover rounded-2xl"
+                    />
                     <div className="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-colors duration-500 z-10" />
                   </motion.button>
                 ) : isGenerating ? (
