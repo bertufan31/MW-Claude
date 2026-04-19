@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { ShoppingBag, Minus, Plus, Check, Star, ChevronLeft, Package, Sparkles } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { ShoppingBag, Minus, Plus, Check, Star, ChevronLeft, Package, Sparkles, X } from 'lucide-react';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import { Button } from '@/components/ui/button';
@@ -18,6 +18,8 @@ export default function ProductDetail() {
   const [quantity, setQuantity] = useState(1);
   const [selectedItem, setSelectedItem] = useState<'video' | number>(product?.video ? 'video' : 0);
   const [isAdded, setIsAdded] = useState(false);
+  const [lightboxSrc, setLightboxSrc] = useState<string | null>(null);
+  const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 });
 
   if (!product) {
     return (
@@ -92,7 +94,8 @@ export default function ProductDetail() {
                   <img
                     src={getAssetUrl(product.images[selectedItem as number] || product.image)}
                     alt={product.name}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover cursor-zoom-in"
+                    onClick={() => setLightboxSrc(getAssetUrl(product.images[selectedItem as number] || product.image))}
                   />
                 )}
                 {/* Badges */}
@@ -274,6 +277,40 @@ export default function ProductDetail() {
         )}
       </main>
       <Footer />
+
+      {/* Lightbox */}
+      <AnimatePresence>
+        {lightboxSrc && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="fixed inset-0 z-50 bg-black/85 flex items-center justify-center cursor-none"
+            onClick={() => setLightboxSrc(null)}
+            onMouseMove={(e) => setCursorPos({ x: e.clientX, y: e.clientY })}
+          >
+            <motion.img
+              src={lightboxSrc}
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="max-h-[90vh] max-w-[90vw] object-contain rounded-xl shadow-2xl"
+              onClick={(e) => e.stopPropagation()}
+            />
+            {/* Custom X cursor */}
+            <div
+              className="fixed pointer-events-none z-50 -translate-x-1/2 -translate-y-1/2"
+              style={{ left: cursorPos.x, top: cursorPos.y }}
+            >
+              <div className="w-10 h-10 rounded-full bg-white/10 backdrop-blur-sm border border-white/30 flex items-center justify-center">
+                <X className="h-5 w-5 text-white" />
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
