@@ -109,7 +109,7 @@ export default function HeroSection() {
               </div>
 
               {/* Product Image Placeholder */}
-              <div className="aspect-[4/3] rounded-2xl bg-secondary mb-3 lg:mb-5 overflow-hidden">
+              <div className="aspect-square rounded-2xl bg-secondary mb-3 lg:mb-5 overflow-hidden">
                 <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-celestial/20 to-gold/20">
                   <Sparkles className="h-14 w-14 lg:h-20 lg:w-20 text-gold/50" />
                 </div>
@@ -123,8 +123,8 @@ export default function HeroSection() {
               </p>
 
               <div className="flex items-center justify-center gap-3 mb-3 lg:mb-5">
-                <span className="text-xl lg:text-2xl font-bold text-foreground">$79.99</span>
-                <span className="text-base lg:text-lg text-muted-foreground line-through">$99.99</span>
+                <span className="text-xl lg:text-2xl font-bold text-foreground">£12</span>
+                <span className="text-base lg:text-lg text-muted-foreground line-through">£18</span>
                 <span className="px-2 py-1 rounded-full bg-sage/20 text-sage text-xs font-medium">
                   Save 20%
                 </span>
