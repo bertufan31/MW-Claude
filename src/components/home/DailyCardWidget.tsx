@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sparkles, Share2, RotateCcw, Loader2, Download } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -10,6 +10,7 @@ import { toast } from '@/hooks/use-toast';
 export default function DailyCardWidget() {
   const [hasDrawn, setHasDrawn] = useState(false);
   const { isGenerating, generatedCard, generateCard, reset } = useTarotCardGenerator();
+  const cardBoxRef = useRef<HTMLDivElement>(null);
 
   const drawCard = async () => {
     const card = getRandomCard();
@@ -20,17 +21,40 @@ export default function DailyCardWidget() {
   const handleDownload = async () => {
     if (!generatedCard?.imageUrl || !generatedCard.card) return;
     try {
-      const res = await fetch(generatedCard.imageUrl);
-      const blob = await res.blob();
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `manifestation-${generatedCard.card.title.toLowerCase().replace(/\s+/g, '-')}.png`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-      toast({ title: 'Downloaded', description: 'Your card has been saved.' });
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      await new Promise<void>((resolve, reject) => {
+        img.onload = () => resolve();
+        img.onerror = reject;
+        img.src = generatedCard.imageUrl!;
+      });
+
+      const rect = cardBoxRef.current?.getBoundingClientRect();
+      const boxW = Math.round(rect?.width ?? 384);
+      const boxH = Math.round(rect?.height ?? 512);
+
+      // Replicate object-cover: scale to cover the box, then center-crop
+      const scale = Math.max(boxW / img.naturalWidth, boxH / img.naturalHeight);
+      const sx = (img.naturalWidth - boxW / scale) / 2;
+      const sy = (img.naturalHeight - boxH / scale) / 2;
+
+      const canvas = document.createElement('canvas');
+      canvas.width = boxW;
+      canvas.height = boxH;
+      canvas.getContext('2d')!.drawImage(img, sx, sy, boxW / scale, boxH / scale, 0, 0, boxW, boxH);
+
+      canvas.toBlob((blob) => {
+        if (!blob) return;
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `manifestation-${generatedCard.card!.title.toLowerCase().replace(/\s+/g, '-')}.png`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        toast({ title: 'Downloaded', description: 'Your card has been saved.' });
+      }, 'image/png');
     } catch {
       toast({ title: 'Download failed', description: 'Please try again.', variant: 'destructive' });
     }
@@ -120,6 +144,7 @@ export default function DailyCardWidget() {
                     animate={{ opacity: 1, rotateY: 0 }}
                     transition={{ duration: 0.6 }}
                     className="relative w-full aspect-[3/4] rounded-2xl shadow-mystical overflow-hidden bg-card"
+                    ref={cardBoxRef}
                   >
                     {generatedCard.imageUrl ? (
                       <img
