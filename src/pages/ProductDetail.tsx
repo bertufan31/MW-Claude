@@ -166,16 +166,16 @@ export default function ProductDetail() {
               {/* Price */}
               <div className="flex items-center gap-4">
                 <span className="font-display text-3xl font-bold text-lavender">
-                  ${product.price.toFixed(2)}
+                  £{product.price % 1 === 0 ? product.price : product.price.toFixed(2)}
                 </span>
                 {product.originalPrice && (
                   <span className="font-body text-xl text-muted-foreground line-through">
-                    ${product.originalPrice.toFixed(2)}
+                    £{product.originalPrice % 1 === 0 ? product.originalPrice : product.originalPrice.toFixed(2)}
                   </span>
                 )}
                 {product.originalPrice && (
                   <Badge variant="outline" className="border-destructive text-destructive">
-                    Save ${(product.originalPrice - product.price).toFixed(2)}
+                    Save £{(product.originalPrice - product.price) % 1 === 0 ? (product.originalPrice - product.price) : (product.originalPrice - product.price).toFixed(2)}
                   </Badge>
                 )}
               </div>
