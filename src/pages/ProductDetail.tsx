@@ -16,7 +16,7 @@ export default function ProductDetail() {
   const product = getProductById(id || '');
   const { addItem } = useCart();
   const [quantity, setQuantity] = useState(1);
-  const [selectedItem, setSelectedItem] = useState<'video' | number>(product.video ? 'video' : 0);
+  const [selectedItem, setSelectedItem] = useState<'video' | number>(product?.video ? 'video' : 0);
   const [isAdded, setIsAdded] = useState(false);
 
   if (!product) {
