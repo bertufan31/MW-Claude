@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useCart } from '@/contexts/CartContext';
 import { getProductById, products, Product } from '@/data/products';
+import { getAssetUrl } from '@/lib/utils';
 import ProductCard from '@/components/products/ProductCard';
 
 export default function ProductDetail() {
@@ -79,7 +80,7 @@ export default function ProductDetail() {
             >
               <div className="relative aspect-square rounded-2xl overflow-hidden bg-muted mb-4">
                 <img
-                  src={product.images[selectedImage] || product.image}
+                  src={getAssetUrl(product.images[selectedImage] || product.image)}
                   alt={product.name}
                   className="w-full h-full object-cover"
                 />
@@ -111,7 +112,7 @@ export default function ProductDetail() {
                       }`}
                     >
                       <img
-                        src={img}
+                        src={getAssetUrl(img)}
                         alt={`${product.name} ${index + 1}`}
                         className="w-full h-full object-cover"
                       />

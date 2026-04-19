@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { useCart } from '@/contexts/CartContext';
 import { Link } from 'react-router-dom';
 import type { Product } from '@/data/products';
+import { getAssetUrl } from '@/lib/utils';
 
 interface ProductCardProps {
   product: Product;
@@ -34,7 +35,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         {/* Image Container */}
         <div className="relative aspect-square rounded-xl overflow-hidden bg-secondary mb-4">
           <img
-            src={product.image}
+            src={getAssetUrl(product.image)}
             alt={product.name}
             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
           />
