@@ -92,7 +92,7 @@ export default function DailyCardWidget() {
                     aria-label="Draw your daily manifestation card"
                   >
                     <video
-                      src="/zoltar cat loop.mp4"
+                      src={`${import.meta.env.BASE_URL}zoltar-cat-loop.mp4`}
                       autoPlay
                       loop
                       muted

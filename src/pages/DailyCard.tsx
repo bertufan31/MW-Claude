@@ -90,7 +90,7 @@ export default function DailyCard() {
                     >
                       <div className="w-full h-full group relative overflow-hidden rounded-2xl shadow-xl hover:shadow-2xl transition-shadow border-2 border-primary/20">
                         <video
-                          src="/zoltar cat loop.mp4"
+                          src={`${import.meta.env.BASE_URL}zoltar-cat-loop.mp4`}
                           autoPlay
                           loop
                           muted
