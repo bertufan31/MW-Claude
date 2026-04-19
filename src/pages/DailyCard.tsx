@@ -88,16 +88,19 @@ export default function DailyCard() {
                       onClick={drawCard}
                       style={{ transformStyle: 'preserve-3d' }}
                     >
-                      <div className="w-full h-full bg-gradient-to-br from-lavender to-primary rounded-2xl flex items-center justify-center shadow-xl hover:shadow-2xl transition-shadow animate-glow-pulse">
-                        <div className="text-center p-8">
-                          <Sparkles className="h-20 w-20 text-olive mx-auto mb-6" />
-                          <p className="font-display text-olive text-2xl font-bold">
-                            Tap to Draw
-                          </p>
-                          <p className="font-body text-olive/70 mt-2">
-                            Your AI-generated guidance awaits
-                          </p>
-                        </div>
+                      <div className="w-full h-full group relative overflow-hidden rounded-2xl shadow-xl hover:shadow-2xl transition-shadow border-2 border-primary/20">
+                        <motion.div
+                          animate={{ scale: [1, 1.02, 1] }}
+                          transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                          className="absolute inset-0 z-0"
+                        >
+                          <img 
+                            src="/pull-your-card.png" 
+                            alt="Pull Your Card" 
+                            className="w-full h-full object-cover" 
+                          />
+                        </motion.div>
+                        <div className="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-colors duration-500 z-10" />
                       </div>
                     </motion.div>
                   ) : isGenerating ? (
