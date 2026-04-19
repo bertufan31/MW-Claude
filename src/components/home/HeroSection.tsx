@@ -101,30 +101,30 @@ export default function HeroSection() {
           duration: 0.8,
           delay: 0.3
         }} className="relative">
-            <div className="relative bg-gradient-card rounded-3xl p-8 shadow-mystical">
+            <div className="relative bg-gradient-card rounded-3xl p-5 lg:p-8 shadow-mystical">
               {/* Badge */}
-              <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-2 rounded-full bg-gold text-gold-foreground text-sm font-semibold flex items-center gap-2 shadow-lg">
+              <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-2 rounded-full bg-gold text-gold-foreground text-sm font-semibold flex items-center gap-2 shadow-lg whitespace-nowrap">
                 <Star className="h-4 w-4 fill-current" />
                 Best Seller
               </div>
 
               {/* Product Image Placeholder */}
-              <div className="aspect-square rounded-2xl bg-secondary mb-6 overflow-hidden">
+              <div className="aspect-[4/3] rounded-2xl bg-secondary mb-3 lg:mb-5 overflow-hidden">
                 <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-celestial/20 to-gold/20">
-                  <Sparkles className="h-20 w-20 text-gold/50" />
+                  <Sparkles className="h-14 w-14 lg:h-20 lg:w-20 text-gold/50" />
                 </div>
               </div>
 
-              <h3 className="font-display text-2xl font-medium text-center mb-2">
+              <h3 className="font-display text-xl lg:text-2xl font-medium text-center mb-1 lg:mb-2">
                 Manifestation Starter Pack
               </h3>
-              <p className="text-muted-foreground text-center text-sm mb-4">
+              <p className="text-muted-foreground text-center text-xs lg:text-sm mb-3">
                 Everything you need to begin: Crystal, Sage, Palo Santo, Vase & Cat Tarot Cards
               </p>
 
-              <div className="flex items-center justify-center gap-3 mb-6">
-                <span className="text-2xl font-bold text-foreground">$79.99</span>
-                <span className="text-lg text-muted-foreground line-through">$99.99</span>
+              <div className="flex items-center justify-center gap-3 mb-3 lg:mb-5">
+                <span className="text-xl lg:text-2xl font-bold text-foreground">$79.99</span>
+                <span className="text-base lg:text-lg text-muted-foreground line-through">$99.99</span>
                 <span className="px-2 py-1 rounded-full bg-sage/20 text-sage text-xs font-medium">
                   Save 20%
                 </span>
